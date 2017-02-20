@@ -14,6 +14,13 @@ var my_news = [
 ];
 
 var Article = React.createClass({
+  propTypes: {
+    content: React.PropTypes.shape({
+      author: React.PropTypes.string.isRequired,
+      text: React.PropTypes.string.isRequired
+    }).isRequired
+  },
+
   render: function() {
     var props = this.props.content;
 
@@ -27,6 +34,10 @@ var Article = React.createClass({
 });
 
 var News = React.createClass({
+  propTypes: {
+    data: React.PropTypes.array.isRequired /* если в пропсах не будет массива, то выдаст в консоль ошибку Failed propType: Required prop `data` was not specified in `News`. Check the render method of `App`.*/
+  },
+
   render: function() {
     var data = this.props.data,
         newsTemplate;
