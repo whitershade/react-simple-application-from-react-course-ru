@@ -26,20 +26,29 @@ var Comments = React.createClass({
 var News = React.createClass({
   render: function() {
     var data = this.props.data,
+        newsTemplate;
 
-        newsTemplate = data.map(function(item, index) {
-          return (
-            <div key={index}> {/* Для геренации ключа нужно использовать id либо хэш, index не надежен, поскольку при удалении элемента из массива он будет идентифицировать уже другой элемент */}
+    if(data.length) {
+      newsTemplate = data.map(function(item, index) {
+        return (
+          <div key={index}> {/* Для геренации ключа нужно использовать id либо хэш, index не надежен, поскольку при удалении элемента из массива он будет идентифицировать уже другой элемент */}
+          <li>
             <p className="news__text">{item.text}</p>
-              <p className="news__author">{item.author}:</p> {/* <p className="news__author">''+item.author+':'</p> */}
-              <p className="news__text">{item.text}</p>
-            </div>
+            <p className="news__author">{item.author}:</p> {/* <p className="news__author">''+item.author+':'</p> */}
+          </li>
+          </div>
           )
-        });
+      });
+    } else {
+      newsTemplate = "Увы, но новостей пока нет, приходите позже. ";
+    }
 
     return (
       <div className="news">
-        {newsTemplate}
+        <ol>
+          {newsTemplate}
+        </ol>
+        <p className={data.length ? '' : 'none'}>Общее количество новостей: {data.length}</p> {/* Для работы с классами, когда их становится больше и условия становятся сложнее, можно использовать classNames (NPM пакет). */}
       </div>
     );
   }
