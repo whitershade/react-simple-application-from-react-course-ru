@@ -13,15 +13,18 @@ var my_news = [
   }
 ];
 
-var Comments = React.createClass({
+var Article = React.createClass({
   render: function() {
-    return (
-      <div className="comments">
-        Нет новостей - комментировать нечего.
+    var props = this.props.content;
+
+    return(
+      <div>
+        <p className="news__text">{props.text}</p>
+        <p className="news__author">{props.author}</p> {/* <p className="news__author">''+item.author+':'</p> */}
       </div>
-    )
+    );
   }
-})
+});
 
 var News = React.createClass({
   render: function() {
@@ -31,13 +34,10 @@ var News = React.createClass({
     if(data.length) {
       newsTemplate = data.map(function(item, index) {
         return (
-          <div key={index}> {/* Для геренации ключа нужно использовать id либо хэш, index не надежен, поскольку при удалении элемента из массива он будет идентифицировать уже другой элемент */}
-          <li>
-            <p className="news__text">{item.text}</p>
-            <p className="news__author">{item.author}:</p> {/* <p className="news__author">''+item.author+':'</p> */}
+          <li key={index} className="article">
+            <Article content = {item} index = {index} />
           </li>
-          </div>
-          )
+        )
       });
     } else {
       newsTemplate = "Увы, но новостей пока нет, приходите позже. ";
@@ -45,10 +45,10 @@ var News = React.createClass({
 
     return (
       <div className="news">
-        <ol>
+        <ol className="news__list">
           {newsTemplate}
         </ol>
-        <p className={data.length ? '' : 'none'}>Общее количество новостей: {data.length}</p> {/* Для работы с классами, когда их становится больше и условия становятся сложнее, можно использовать classNames (NPM пакет). */}
+        <p className={'news__count ' + (data.length ? '' : 'none')}>Общее количество новостей: {data.length}</p> {/* Для работы с классами, когда их становится больше и условия становятся сложнее, можно использовать classNames (NPM пакет). */}
       </div>
     );
   }
@@ -58,9 +58,8 @@ var App = React.createClass({
   render: function() {
     return (
       <div className="app">
-        Всем привет, я компонент App! Я умею отображать новости.
-        <News data = {my_news}/> {/* send data to News props */}
-        <Comments />
+        <h3>Новости</h3>
+        <News data = {my_news} /> {/* send data to News props */}
       </div>
     );
   }
