@@ -64,12 +64,9 @@ var TestInput = React.createClass({
     };
   },
 
-  testInputOnChange: function(e) {
-    this.setState({testInputValue: e.target.value})
-  },
-
   showValueOfTestInput: function() {
-    alert(this.state.testInputValue);
+    alert(ReactDOM.findDOMNode(this.refs.myTestInput).value);
+    console.log(this.refs);
   },
 
   render: function() {
@@ -78,10 +75,12 @@ var TestInput = React.createClass({
         <input
           className='test-input'
           placeholder='Введите значение'
-          onChange={this.testInputOnChange}
+          defaultValue=''
+          ref='myTestInput'
         />
-        <button onClick={this.showValueOfTestInput}>
-          Показать значение инпута
+        <button onClick={this.showValueOfTestInput}
+                ref='alertButton'>
+                Показать значение инпута
         </button>
       </div>
     );
