@@ -1,15 +1,18 @@
 var my_news = [
   {
     author: 'Саша Печкин',
-    text: 'В четверг, четвертого числа...'
+    text: 'В четверг, четвертого числа...',
+     bigText: 'в четыре с четвертью часа четыре чёрненьких чумазеньких чертёнка чертили чёрными чернилами чертёж.'
   },
   {
     author: 'Просто Вася',
-    text: 'Считаю, что $ должен стоить 8 гривен!'
+    text: 'Считаю, что $ должен стоить 8 гривен!',
+    bigText: 'А евро я уже и не помню сколько стоило, 12 гривен?'
   },
   {
     author: 'Гость',
-    text: 'Бесплатно. Скачать. Лучший сайт - http://localhost:3000'
+    text: 'Бесплатно. Скачать. Лучший сайт - http://localhost:3000',
+    bigText: 'На самом деле платно, просто нужно прочитать очень длинное лицензионное соглашение'
   }
 ];
 
@@ -21,13 +24,33 @@ var Article = React.createClass({
     }).isRequired
   },
 
+  getInitialState: function() {
+    return {
+      showMoreTextIsVisible: false
+    };
+  },
+
+  readmoreClick: function(e) {
+    e.preventDefault();
+    this.setState({showMoreTextIsVisible: !this.state.showMoreTextIsVisible}, function() {
+      console.log('State showMoreTextIsVisible was changed to ' + this.state.showMoreTextIsVisible);
+    })
+  },
+
   render: function() {
-    var props = this.props.content;
+    var props = this.props.content,
+        state = this.state;
 
     return(
       <div>
         <p className="news__text">{props.text}</p>
         <p className="news__author">{props.author}</p> {/* <p className="news__author">''+item.author+':'</p> */}
+        <a href="#"
+           className='news__readmore'
+           onClick={this.readmoreClick}>
+           Подробнее
+        </a>
+        <p className={'news__big-text ' + (state.showMoreTextIsVisible ? '' : 'hide')}>{props.bigText}</p>
       </div>
     );
   }
@@ -59,7 +82,7 @@ var News = React.createClass({
         <ol className="news__list">
           {newsTemplate}
         </ol>
-        <p className={'news__count ' + (data.length ? '' : 'none')}>Общее количество новостей: {data.length}</p> {/* Для работы с классами, когда их становится больше и условия становятся сложнее, можно использовать classNames (NPM пакет). */}
+        <p className={'news__count ' + (data.length ? '' : 'hide')}>Общее количество новостей: {data.length}</p> {/* Для работы с классами, когда их становится больше и условия становятся сложнее, можно использовать classNames (NPM пакет). */}
       </div>
     );
   }
