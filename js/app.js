@@ -2,7 +2,7 @@ var my_news = [
   {
     author: 'Саша Печкин',
     text: 'В четверг, четвертого числа...',
-     bigText: 'в четыре с четвертью часа четыре чёрненьких чумазеньких чертёнка чертили чёрными чернилами чертёж.'
+    bigText: 'в четыре с четвертью часа четыре чёрненьких чумазеньких чертёнка чертили чёрными чернилами чертёж.'
   },
   {
     author: 'Просто Вася',
@@ -41,7 +41,8 @@ var Article = React.createClass({
     var props = this.props.content,
         state = this.state;
 
-    return(
+   console.log('render Article'); // Изменение state вызывает render компонента
+   return(
       <div>
         <p className="news__text">{props.text}</p>
         <p className="news__author">{props.author}</p> {/* <p className="news__author">''+item.author+':'</p> */}
@@ -61,9 +62,24 @@ var News = React.createClass({
     data: React.PropTypes.array.isRequired /* если в пропсах не будет массива, то выдаст в консоль ошибку Failed propType: Required prop `data` was not specified in `News`. Check the render method of `App`.*/
   },
 
+  getInitialState: function() {
+    return {
+      counter: 0
+    };
+  },
+
+  incrementTotalNewsCounter: function() {
+    this.setState({
+      counter: ++this.state.counter // setState() - не изменяет this.state немедленно, а создает очередь изменений состояния. Доступ к this.state после вызова метода, потенциально может вернуть имеющееся (что равносильно - бывшее) значение. Постфиксная запись не изменит значения.
+    });
+  },
+
   render: function() {
     var data = this.props.data,
+        state = this.state,
         newsTemplate;
+
+    console.log('render News');
 
     if(data.length) {
       newsTemplate = data.map(function(item, index) {
@@ -82,7 +98,11 @@ var News = React.createClass({
         <ol className="news__list">
           {newsTemplate}
         </ol>
-        <p className={'news__count ' + (data.length ? '' : 'hide')}>Общее количество новостей: {data.length}</p> {/* Для работы с классами, когда их становится больше и условия становятся сложнее, можно использовать classNames (NPM пакет). */}
+        <p className={'news__count ' + (data.length ? '' : 'hide')}
+           onClick={this.incrementTotalNewsCounter}>
+           Общее количество новостей: {data.length}
+        </p> {/* Для работы с классами, когда их становится больше и условия становятся сложнее, можно использовать classNames (NPM пакет). */}
+        <p>Счетчик кликов: {this.state.counter}</p>
       </div>
     );
   }
