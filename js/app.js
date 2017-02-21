@@ -57,6 +57,37 @@ var Article = React.createClass({
   }
 });
 
+var TestInput = React.createClass({
+  getInitialState: function() {
+    return {
+      testInputValue: ''
+    };
+  },
+
+  testInputOnChange: function(e) {
+    this.setState({testInputValue: e.target.value})
+  },
+
+  showValueOfTestInput: function() {
+    alert(this.state.testInputValue);
+  },
+
+  render: function() {
+    return (
+      <div>
+        <input
+          className='test-input'
+          placeholder='Введите значение'
+          onChange={this.testInputOnChange}
+        />
+        <button onClick={this.showValueOfTestInput}>
+          Показать значение инпута
+        </button>
+      </div>
+    );
+  }
+});
+
 var News = React.createClass({
   propTypes: {
     data: React.PropTypes.array.isRequired /* если в пропсах не будет массива, то выдаст в консоль ошибку Failed propType: Required prop `data` was not specified in `News`. Check the render method of `App`.*/
@@ -76,7 +107,6 @@ var News = React.createClass({
 
   render: function() {
     var data = this.props.data,
-        state = this.state,
         newsTemplate;
 
     console.log('render News');
@@ -113,6 +143,7 @@ var App = React.createClass({
     return (
       <div className="app">
         <h3>Новости</h3>
+        <TestInput />
         <News data = {my_news} /> {/* send data to News props */}
       </div>
     );
