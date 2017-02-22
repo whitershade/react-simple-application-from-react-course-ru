@@ -64,6 +64,10 @@ var TestInput = React.createClass({
     };
   },
 
+  componentDidMount: function() { //ставим фокус в input
+    ReactDOM.findDOMNode(this.refs.myTestInput).focus();
+  },
+
   showValueOfTestInput: function() {
     alert(ReactDOM.findDOMNode(this.refs.myTestInput).value);
     console.log(this.refs);
