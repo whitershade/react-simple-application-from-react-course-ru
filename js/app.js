@@ -1,3 +1,5 @@
+window.ee = new EventEmitter();
+
 var my_news = [
   {
     author: 'Саша Печкин',
@@ -68,10 +70,15 @@ var Add = React.createClass({
   componentDidMount: function() {
     ReactDOM.findDOMNode(this.refs.author).focus();
   },
-  onBtnClickHandler: function() {
+  onBtnClickHandler: function(e) {
+    e.preventDefault();
     let author = ReactDOM.findDOMNode(this.refs.author).value,
         text = ReactDOM.findDOMNode(this.refs.text).value;
-    console.log('author: ' + author + '\n' + 'text: ' + text);
+    window.ee.emit('News.add', [{
+        author: author,
+        text: text,
+        bigText: '...'
+      }]);
   },
   onCheckRuleClick: function(e) {
     this.setState({ checkRulesBoxIsEmpty: !e.target.checked })
@@ -167,12 +174,31 @@ var News = React.createClass({
 });
 
 var App = React.createClass({
+  getInitialState: function() {
+    return {
+      news: my_news
+    };
+  },
+  componentDidMount: function() {
+    /* Слушай событие "Создана новость"
+      если событие произошло, обнови this.state.news
+    */
+    var that = this;
+      window.ee.addListener('News.add', function(item) {
+        var nextNews = item.concat(that.state.news);
+        that.setState({news: nextNews});
+      });
+  },
+  componentWillUnmount: function() {
+    /* Больше не слушай событие "Создана новость" */
+    window.ee.removeListener('News.add');
+  },
   render: function() {
     return (
       <div className="app">
         <h3>Новости</h3>
         <Add />
-        <News data = {my_news} /> {/* send data to News props */}
+        <News data = {this.state.news} /> {/* send data to News props */}
       </div>
     );
   }
